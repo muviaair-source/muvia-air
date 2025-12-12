@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="b.png">
+    <title>Muvia Air – Partnership Form</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(to bottom right, #e8ffff, #d0f7ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #ffffff;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 180, 200, 0.2);
+            animation: fadeIn 0.7s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            color: #009db5;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #024b52;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border: 1px solid #b7f1ff;
+            border-radius: 10px;
+            font-size: 15px;
+            background: #f6feff;
+            transition: all .2s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #00c4de;
+            box-shadow: 0 0 8px rgba(0, 200, 220, 0.3);
+            background: #ffffff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: #00c1d4;
+            border: none;
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .btn:hover {
+            background: #008fa0;
+        }
+
+        #status {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Muvia Air Partnership Form</h1>
+        <p class="subtitle">“Needs on Wings” — Partner With Us</p>
+
+        <form id="partnerForm">
+
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="name" required placeholder="Enter your full name">
+            </div>
+
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="email" required placeholder="Enter email address">
+            </div>
+
+            <div class="input-group">
+                <label>Phone Number</label>
+                <input type="tel" id="phone" required placeholder="+234…">
+            </div>
+
+            <div class="input-group">
+                <label>Organization / Hospital / NGO</label>
+                <input type="text" id="organization" required placeholder="Your organization name">
+            </div>
+
+            <div class="input-group">
+                <label>Partnership Type</label>
+                <select id="type" required>
+                    <option value="">Select partnership type</option>
+                    <option>Medical Logistics</option>
+                    <option>SME / E-commerce Delivery</option>
+                    <option>Humanitarian / Disaster Response</option>
+                    <option>Government Partnership</option>
+                    <option>Investment / Funding</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Your Message</label>
+                <textarea id="message" rows="4" required placeholder="Tell us how you want to collaborate..."></textarea>
+            </div>
+
+            <button type="submit" class="btn">Submit Form</button>
+
+            <p id="status"></p>
+
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("partnerForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            let name = document.getElementById("name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let organization = document.getElementById("organization").value.trim();
+            let type = document.getElementById("type").value.trim();
+            let message = document.getElementById("message").value.trim();
+            let status = document.getElementById("status");
+
+            if (!name || !email || !phone || !organization || !type || !message) {
+                status.style.color = "red";
+                status.textContent = "Please fill all fields!";
+                return;
+            }
+
+            status.style.color = "green";
+            status.textContent = "Submitting...";
+
+            const scriptURL = "YOUR_GOOGLE_SCRIPT_URL_HERE"; // <-- Replace this
+
+            fetch(scriptURL, {
+                method: "POST",
+                mode: "cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    phone,
+                    organization,
+                    type,
+                    message
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                status.style.color = "green";
+                status.textContent = "Form submitted successfully! Check your email.";
+
+                document.getElementById("partnerForm").reset();
+            })
+            .catch(err => {
+                status.style.color = "red";
+                status.textContent = "Submission failed. Please try again.";
+                console.error("Error:", err);
+            });
+
+        });
+    </script>
+
+</body>
+</html>
