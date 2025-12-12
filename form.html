@@ -152,54 +152,35 @@
         document.getElementById("partnerForm").addEventListener("submit", function(e) {
             e.preventDefault();
 
-            let name = document.getElementById("name").value.trim();
-            let email = document.getElementById("email").value.trim();
-            let phone = document.getElementById("phone").value.trim();
-            let organization = document.getElementById("organization").value.trim();
-            let type = document.getElementById("type").value.trim();
-            let message = document.getElementById("message").value.trim();
             let status = document.getElementById("status");
-
-            if (!name || !email || !phone || !organization || !type || !message) {
-                status.style.color = "red";
-                status.textContent = "Please fill all fields!";
-                return;
-            }
-
             status.style.color = "green";
             status.textContent = "Submitting...";
 
-            const scriptURL = "https://script.google.com/macros/s/AKfycbw7Uu1LjeN_IqGmb17bcHCNJ6j4OL6Hig80zvUBN3Giq2UEVxXkRcfEfQ9Psf3wxosoTg/exec"; // <-- Replace this
+            // FORM DATA METHOD — NO CORS BLOCK
+            let formData = new FormData();
+            formData.append("name", document.getElementById("name").value);
+            formData.append("email", document.getElementById("email").value);
+            formData.append("phone", document.getElementById("phone").value);
+            formData.append("organization", document.getElementById("organization").value);
+            formData.append("type", document.getElementById("type").value);
+            formData.append("message", document.getElementById("message").value);
 
-            fetch(scriptURL, {
+            fetch("https://script.google.com/macros/s/AKfycbw7Uu1LjeN_IqGmb17bcHCNJ6j4OL6Hig80zvUBN3Giq2UEVxXkRcfEfQ9Psf3wxosoTg/exec", {
                 method: "POST",
-                mode: "cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name,
-                    email,
-                    phone,
-                    organization,
-                    type,
-                    message
-                })
+                body: formData
             })
-            .then(res => res.json())
-            .then(data => {
+            .then(() => {
                 status.style.color = "green";
-                status.textContent = "Form submitted successfully! Check your email.";
-
+                status.textContent = "Form submitted successfully!";
                 document.getElementById("partnerForm").reset();
             })
             .catch(err => {
+                console.error("Error:", err);
                 status.style.color = "red";
                 status.textContent = "Submission failed. Please try again.";
-                console.error("Error:", err);
             });
-
         });
     </script>
 
 </body>
 </html>
-
